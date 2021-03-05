@@ -1,0 +1,62 @@
+version: "3"
+
+services:
+
+  unsecure-web:
+    build:
+      context: ./src/unsecure/
+      dockerfile: caddy.dockerfile
+    ports:
+      - 8080:80
+
+  unsecure-php:
+    build:
+      context: ./src/unsecure
+    volumes:
+      - ./src/unsecure/src:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_NAME=exam
+      - DB_USERNAME=exam
+      - DB_PASSWORD=eIggr3T18BNkLZ17
+
+  secure-web:
+    build:
+      context: ./src/secure/caddy
+    ports:
+      - 8081:80
+
+  secure-php:
+    build:
+      context: ./src/secure
+    volumes:
+      - ./src/secure/src:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_NAME=exam
+      - DB_USERNAME=exam
+      - DB_PASSWORD=eIggr3T18BNkLZ17
+
+  laravel-web:
+    build:
+      context: ./src/laravel/caddy
+    ports:
+      - 8082:80
+
+  laravel-php:
+    build:
+      context: ./src/laravel
+    volumes:
+      - ./src/laravel/src:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_NAME=exam
+      - DB_USERNAME=exam
+      - DB_PASSWORD=eIggr3T18BNkLZ17
+
+  db:
+    image: mariadb:10.5.9-focal
+    environment:
+      - MYSQL_ROOT_PASSWORD=cpuSUW49oS9TNIzB
+    volumes:
+      - ./db-init.sql:/docker-entrypoint-initdb.d/db-init.sql
