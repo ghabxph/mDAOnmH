@@ -9,7 +9,7 @@ curve than the latter.
 
 * [Unsecured README.md - Explaining Issues](src/unsecure)
 * [Secured README.md - The fixes](src/secure)
-* [Bonus: The laravel way](src/secure)
+* [Bonus: The laravel way](src/laravel)
 
 ## Getting stated
 
