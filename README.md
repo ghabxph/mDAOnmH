@@ -7,9 +7,9 @@ curve than the latter.
 
 ## Important Links:
 
-* [Unsecured README.md - Explaining Issues](src/unsecure/README.md)
-* [Secured README.md - The fixes](src/secure/README.md)
-* [Bonus: The laravel way](src/secure/README.md)
+* [Unsecured README.md - Explaining Issues](src/unsecure)
+* [Secured README.md - The fixes](src/secure)
+* [Bonus: The laravel way](src/secure)
 
 ## Getting stated
 
