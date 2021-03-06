@@ -3,7 +3,7 @@
     if (trim($_GET['filter']) !== '') {
         $sql = 'SELECT * FROM blog WHERE type="'.$_GET['filter'].'" ORDER BY created_at DESC;';
     }
-    $connection = mysqli_connect("localhost", "root", "", "exam");
+    $connection = mysqli_connect($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     $res = mysqli_query($connection, $sql);
     $blogs = [];
     while ($row = mysqli_fetch_assoc($res)) {

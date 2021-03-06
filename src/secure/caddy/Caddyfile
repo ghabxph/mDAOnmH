@@ -10,10 +10,10 @@
 :80
 
 # Set this path to your site's directory.
-# root * /var/www/html
+root * /var/www/html
 
 # Enable the static file server.
-#file_server
+file_server
 
 # Another common task is to set up a reverse proxy:
 # reverse_proxy localhost:8080
@@ -21,7 +21,7 @@
 rewrite / /index.php
 
 # Or serve a PHP site through php-fpm:
-php_fastcgi secure-php:9000 {
+php_fastcgi unsecure-php:9000 {
     root /var/www/html
     index index.php
 }

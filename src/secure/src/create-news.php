@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             created_at = NOW()
     ';
 
-    $connection = mysqli_connect("localhost", "root", "", "exam");
+    $connection = mysqli_connect($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
     $res = mysqli_query($connection, $sql);
     mysqli_close($connection);
     header('Location: /index.php');
