@@ -51,3 +51,10 @@ must implement validation for this.
 In the server side, the content must be trimmed to specific number of string  so  that  we
 only display enough characters in our page. In return, the number  of  bytes  we  received
 from index.php would be minimal.
+
+## Desired Architechture (Keeping the endpoints)
+
+It doesn't mean that clean architechture is limited to OOP. This  is  my  initial  desired
+clean design that I'm going to work on for the next iteration of this application.
+
+![](../../assets/desired-architechture-1.jpg)
