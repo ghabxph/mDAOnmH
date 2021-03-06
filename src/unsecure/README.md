@@ -115,6 +115,26 @@ Wrap it with `htmlspecialchars`.
             <?php } ?>
 ```
 
+### 4. Arbitrary File Overwrite
+
+**Potential violation of integrity (CIA):**
+``` php
+    if (is_array($_FILES)) {
+        move_uploaded_file(
+            $_FILES['file']['tmp_name'],
+            __DIR__.'/uploads/'.$_FILES['file']['name']
+        );
+        $filename = $_FILES['file']['name'];
+    }
+```
+
+**Allow this if it's part of the use case, otherwise server must generate its own filename**
+There is no use case in this  application  that  specifies  that  files  uploaded  can  be
+revised. Therefore the best practice is to have server generate a file name for the file
+uploaded instead of using the name from the client side.
+
+Best approach for naming the file is by doing sha256 hash and use the result value as name.
+
 ## Code Issues
 
 ### 1. Inconsistency on line 3 ~ 5 leading to potentially undesirable result.
