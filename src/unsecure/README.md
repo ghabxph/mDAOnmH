@@ -31,8 +31,14 @@ $sql = 'SELECT * FROM blog WHERE type="'.$_GET['filter'].'" ORDER BY created_at 
 ```
 
 **Why it is a problem?**
-The variables are fresh from user input (`$_GET` / `$_POST`). The variables must be at least sql-escaped,
-or the simplest solution is to make use of prepared statements.
+The variables are fresh from user  input  (`$_GET` / `$_POST`).  The  variables  must  be  at  least
+sql-escaped, or the simplest solution is to make use of prepared statements.
+
+**Notes:**
+The `index.php` returns an error when we put a double quote. It gives a signal for hackers to do SQL
+injection. The `create-news.php` does not return an error when we put double quote. This is a  blind
+sql injection and it can be tricky for hackers. We know that there's blind sql injection because  we
+got access to the source code.
 
 ### 2. Unrestricted file upload vulnerability
 
@@ -48,30 +54,32 @@ or the simplest solution is to make use of prepared statements.
 ```
 
 **Why it is a problem:**
-The `uploads/` folder is public, and if the webserver is not configured to not execute PHP on the
+The `uploads/` folder is public, and if the webserver is not configured to not execute  PHP  on  the
 said folder, the webserver is vulnerable to arbitrary code execution by simply uploading PHP scripts
 on the webserver. The attacker can upload shell and take control over the server.
 
 **Solution:**
 1. (Safest) Implement a safe zone where public upload directories would not execute php files.
-   Given with the nature of PHP, this is rather a problem in the operations side and developers usually
-   don't have power to play on these settings. The operations team can implement safe zones where PHP
-   files are not executed. In apache, the solution is to simply set `php_flag engine off` to target
-   directory, in which our case is: `/var/www/html/uploads/` and serve PHP files as text through
-   `Content-type` header.
+   Given with the nature of PHP, this is rather a problem in  the  operations  side  and  developers
+   usually don't have power to play on these settings. The operations team can implement safe  zones
+   where PHP files are not executed. In apache, the solution is to simply set  `php_flag engine off`
+   to target  directory, in which our case is: `/var/www/html/uploads/` and serve PHP files as  text
+   through `Content-type` header.
    
 2. (Developer Approach) Explicitly disallow the upload of PHP if there's no explicit use case.
-   * Common developer mistakes is that some developers uses mime-type to determine file type, but the
-     nature of mime-type is client side. The browser defines the file's mime-type through its file extension
-     or whatever mechanism. To exploit this vulnerability, an attacker can forge the request to fool the
-     server.
-   * The solution is simply disallow all files that ends in `*.php` or any php-executable set of files.
+   * Common developer mistakes is that some developers uses mime-type to determine  file  type,  but
+     the nature of mime-type is client side. The browser defines the file's mime- type  through  its
+     file extension or whatever mechanism. To exploit this vulnerability, an attacker can forge  the
+     request to fool the server.
+   * The solution is simply disallow all files that ends in `*.php` or  any  php-executable  set  of
+     files.
 
 **PS:**
-I did mention that the above code is **potentially dangerous**. Why not simply dangerous? It is because
-it is possible to prevent PHP execution by configuring your webserver not to execute PHP on specific
-public directory. Developers don't usually play with this, and this is an operations problem. The common
-approach for vast majority of developers is to simply disallow uploading of PHP script.
+I did mention that the above code is **potentially dangerous**. Why  not  simply  dangerous?  It  is
+because it is possible to prevent PHP execution by configuring your webserver not to execute PHP  on
+specific public directory. Developers don't usually play  with  this,  and  this  is  an  operations
+problem. The common approach for vast majority of developers is to simply disallow uploading of  PHP
+script.
 
 ### 3. Persistent XSS
 
@@ -81,7 +89,7 @@ approach for vast majority of developers is to simply disallow uploading of PHP 
 <h4 class="card-title"><?=$blog['title']?></h4>
 ```
 
-It is persistent XSS because the data comes from the database. And it is vulnerable to XSS because
+It is persistent XSS because the data comes from the database. And it is vulnerable to  XSS  because
 the variable is not html-safe.
 
 **Solution:**
