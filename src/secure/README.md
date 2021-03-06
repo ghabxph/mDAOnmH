@@ -58,3 +58,36 @@ It doesn't mean that clean architechture is limited to OOP. This  is  my  initia
 clean design that I'm going to work on for the next iteration of this application.
 
 ![](../../assets/desired-architechture-1.jpg)
+
+The file upload storage has already been implemented in this stage. The `Caddyfile` setting
+that allows it to be possible is this code snippet below.
+
+``` 
+# Runs at port 80
+:80
+
+# Regular expression to match php files
+@php {
+     path_regexp ^/[a-z\-]*\.php$
+}
+
+# Set for all routes
+root * /var/www/html
+
+# Set uploads route
+root /uploads/* /var/www
+
+# Enable file server
+file_server
+
+# Rewrite / to index.php
+rewrite / /index.php
+
+# Or serve a PHP site through php-fpm:
+php_fastcgi @php secure-php:9000 {
+    index index.php
+}
+```
+
+The rest are to be implemented on the next iteration without using any frameworks to keep
+things lean and similar to original source code.
