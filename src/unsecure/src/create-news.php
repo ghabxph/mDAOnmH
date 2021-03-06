@@ -19,10 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ';
 
     $connection = mysqli_connect($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
-    var_dump($sql);
     $res = mysqli_query($connection, $sql);
-    var_dump($res);
-    var_dump(mysqli_error($connection));
     mysqli_close($connection);
     header('Location: /index.php');
 }
