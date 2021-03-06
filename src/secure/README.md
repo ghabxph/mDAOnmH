@@ -16,6 +16,9 @@
   * Uploads folder is placed in a safe location where PHP scripts will not execute.
     * `/var/www/uploads`
     * This new folder is being served by caddy web server separately.
+  * Hashes the uploaded file and use it as the file's file name.
+  * Restricts the file extension to images only specified here in this document.
+    * https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
 
 ## Issues
 

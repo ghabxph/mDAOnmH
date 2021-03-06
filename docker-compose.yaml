@@ -6,6 +6,9 @@ services:
     build:
       context: ./src/unsecure/
       dockerfile: caddy.dockerfile
+    volumes:
+      - ./src/unsecure/src:/var/www/html
+      - unsecure-uploads:/var/www/html/uploads
     ports:
       - 8080:80
 
@@ -14,6 +17,7 @@ services:
       context: ./src/unsecure
     volumes:
       - ./src/unsecure/src:/var/www/html
+      - unsecure-uploads:/var/www/html/uploads
     environment:
       - DB_HOST=db
       - DB_NAME=exam
@@ -22,7 +26,11 @@ services:
 
   secure-web:
     build:
-      context: ./src/secure/caddy
+      context: ./src/secure/
+      dockerfile: caddy.dockerfile
+    volumes:
+      - ./src/secure/src:/var/www/html
+      - secure-uploads:/var/www/uploads
     ports:
       - 8081:80
 
@@ -31,6 +39,7 @@ services:
       context: ./src/secure
     volumes:
       - ./src/secure/src:/var/www/html
+      - secure-uploads:/var/www/uploads
     environment:
       - DB_HOST=db
       - DB_NAME=exam
@@ -60,3 +69,7 @@ services:
       - MYSQL_ROOT_PASSWORD=cpuSUW49oS9TNIzB
     volumes:
       - ./db-init.sql:/docker-entrypoint-initdb.d/db-init.sql
+
+volumes:
+  unsecure-uploads:
+  secure-uploads:

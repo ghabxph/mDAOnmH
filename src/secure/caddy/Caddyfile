@@ -7,24 +7,28 @@
 # sure your domain's A/AAAA DNS records are properly pointed to
 # this machine's public IP, then replace the line below with your
 # domain name.
+
+# Runs at port 80
 :80
 
-# Set this path to your site's directory.
+# Regular expression to match php files
+@php {
+     path_regexp ^/[a-z\-]*\.php$
+}
+
+# Set for all routes
 root * /var/www/html
 
-# Enable the static file server.
+# Set uploads route
+root /uploads/* /var/www
+
+# Enable file server
 file_server
 
-# Another common task is to set up a reverse proxy:
-# reverse_proxy localhost:8080
-
+# Rewrite / to index.php
 rewrite / /index.php
 
 # Or serve a PHP site through php-fpm:
-php_fastcgi unsecure-php:9000 {
-    root /var/www/html
+php_fastcgi @php secure-php:9000 {
     index index.php
 }
-
-# Refer to the Caddy docs for more information:
-# https://caddyserver.com/docs/caddyfile

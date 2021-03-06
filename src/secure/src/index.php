@@ -1,15 +1,36 @@
 <?php
-    $sql = "SELECT * FROM blog ORDER BY created_at DESC;";
-    if (trim($_GET['filter']) !== '') {
-        $sql = 'SELECT * FROM blog WHERE type="'.$_GET['filter'].'" ORDER BY created_at DESC;';
-    }
-    $connection = mysqli_connect($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
-    $res = mysqli_query($connection, $sql);
-    $blogs = [];
-    while ($row = mysqli_fetch_assoc($res)) {
-        $blogs[] = $row;
-    }
-    mysqli_close($connection);
+
+// Escaper (alias of htmlspecialchars)
+function e($unsafe) { return htmlspecialchars($unsafe); }
+
+// Check if connection is not successful
+if (!$connection = mysqli_connect($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME'])) {
+    die ("Error on connecting to database.");
+}
+
+if (($filter = trim($_GET['filter'])) !== '') {
+
+    // If filter is set, we will create a prepared statement with parameters
+    $stmt = mysqli_prepare($connection, 'SELECT * FROM blog WHERE type=? ORDER BY created_at DESC;');
+
+    // Then bind the filter parameter
+    $stmt->bind_param('s', $filter);
+
+} else {
+
+    // If not, we'll skip the parameter.
+    $stmt = mysqli_prepare($connection, 'SELECT * FROM blog ORDER BY created_at DESC;');
+}
+
+// Executing our query
+$res = $stmt->execute();
+
+// Binding the results in variable after we executed our query.
+$stmt->bind_result($id, $title, $content, $filename, $type, $created_at);
+
+// Number of rows
+$count = 0;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,25 +79,25 @@
 
     <div class="container">
         <div class="row text-center">
-            <?php if (empty($blogs)) { ?>
-                <header class="jumbotron mt-4 mx-auto mb-12">
-                    <h1 class="display-3">Oops no entry for this type!</h1>
-                    <a class="btn btn-primary btn-lg mt-4" href="/create-news.php">Create Article</a>
-                </header>
-            <?php } ?>
-            <?php foreach ($blogs as $blog) { ?>
+            <?php while($stmt->fetch()) { $count++ ?>
             <div class="col-lg-3 col-md-6 mb-4 mt-2">
                 <div class="card h-100">
-                    <img class="card-img-top" src="uploads/<?=$blog['filename']?>" alt="">
+                    <img class="card-img-top" src="uploads/<?=e($filename)?>" alt="">
                     <div class="card-body">
-                        <h4 class="card-title"><?=$blog['title']?></h4>
-                        <p class="card-text" style="text-overflow:ellipsis; max-height: 200px; overflow:hidden"><?=$blog['content']?></p>
+                        <h4 class="card-title"><?=e($title)?></h4>
+                        <p class="card-text" style="text-overflow:ellipsis; max-height: 200px; overflow:hidden"><?=e($content)?></p>
                     </div>
                     <div class="card-footer">
                         <a href="#" class="btn btn-primary">Find Out More!</a>
                     </div>
                 </div>
             </div>
+            <?php } ?>
+            <?php if ($count === 0) { ?>
+                <header class="jumbotron mt-4 mx-auto mb-12">
+                    <h1 class="display-3">Oops no entry for this type!</h1>
+                    <a class="btn btn-primary btn-lg mt-4" href="/create-news.php">Create Article</a>
+                </header>
             <?php } ?>
         </div>
     </div>
@@ -88,3 +109,6 @@
     </footer>
 </body>
 </html>
+
+<?php // Closing statement and mysqli connection ?>
+<?php $stmt->close(); mysqli_close($connection) ?>

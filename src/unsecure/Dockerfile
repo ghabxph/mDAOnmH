@@ -4,11 +4,13 @@ FROM php:7.4-fpm-alpine3.13
 WORKDIR /var/www/html
 
 # Pre-setup
-RUN docker-php-ext-install mysqli && \
-    mkdir -p uploads && chown www-data:www-data uploads
+RUN docker-php-ext-install mysqli
 
 # Copy PHP files
 COPY src/ /var/www/html
+
+# Setup uploads folder
+RUN mkdir -p uploads && chown www-data:www-data uploads
 
 # Downgrade user to non-root
 USER www-data
