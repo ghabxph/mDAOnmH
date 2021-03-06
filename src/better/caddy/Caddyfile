@@ -1,0 +1,34 @@
+# The Caddyfile is an easy way to configure your Caddy web server.
+#
+# Unless the file starts with a global options block, the first
+# uncommented line is always the address of your site.
+#
+# To use your own domain name (with automatic HTTPS), first make
+# sure your domain's A/AAAA DNS records are properly pointed to
+# this machine's public IP, then replace the line below with your
+# domain name.
+
+# Runs at port 80
+:80
+
+# Regular expression to match php files
+@php {
+     path_regexp ^/[a-z\-]*\.php$
+}
+
+# Set for all routes
+root * /var/www/html
+
+# Set uploads route
+root /uploads/* /var/www
+
+# Enable file server
+file_server
+
+# Rewrite / to index.php
+rewrite / /index.php
+
+# Or serve a PHP site through php-fpm:
+php_fastcgi @php secure-php:9000 {
+    index index.php
+}
