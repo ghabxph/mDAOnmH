@@ -1,6 +1,7 @@
 <?php
 
 require(__DIR__ . '/../domain/entity.php');
+require(__DIR__ . '/test.php');
 
 /**
  * Type: Entity
@@ -25,20 +26,24 @@ function test_entity_blog_list_by_type() {
 function test_entity_blog_create($p) {
 
     // Run target function
-    entity_blog_create($p);
+    $status = entity_blog_create($p);
 
-    // Prepares statement
-    $stmt = db()->prepare('SELECT * FROM blog WHERE title = ?');
+    // Status must be true
+    assert_equal(TRUE, $status, 'entity_blog_create($p) should return true');
 
-    // Binds input to the statement
-    $stmt->bind_param('s', $p['title']);
+    // Checks newly inserted data to db
+    $stmt = read('SELECT * FROM blog WHERE title = ?', 's', $p, $id, $title, $content, $filename, $type, $created_at);
 
-    // Binds result to a variable
+    // Should return at least 1 value
+    assert_equal(TRUE, $stmt->fetch(), 'There should be at least one row');
 
-    // Executes query
-    $stmt->execute();
+    // Should be equal to inserted title
+    assert_equal($p['title'], $title, 'Should be equal to inserted title');
+    assert_equal($p['content'], $content, 'Should be equal to inserted content');
+    assert_equal($p['filename'], $filename, 'Should be equal to inserted filename');
+    assert_equal($p['type'], $type, 'Should be equal to inserted type');
 
-    // Close statement
+    // Closes the statement
     $stmt->close();
 }
 
@@ -48,18 +53,22 @@ function test_entity_blog_create($p) {
  **/
 function data_entity_blog_create() {
 
+    echo " ~~ Running test for entity_blog_create() ~~ \n";
+
     $dataset = [
-        [
+        'Dataset 1: Government News' => [
             'title'    => 'Government News',
             'content'  => 'Well, nice content',
             'type'     => 'Government',
             'filename' => ''
-        ], [
+        ],
+        'Dataset 2: Food News' => [
             'title'    => 'Food News',
             'content'  => 'I\'m hungry.',
             'type'     => 'Food',
             'filename' => ''
-        ], [
+        ],
+        'Dataset 3: Sports News' => [
             'title'    => 'Sports News',
             'content'  => 'Let\'s play.. Uh...',
             'type'     => 'Sports',
@@ -68,6 +77,8 @@ function data_entity_blog_create() {
     ];
 
     run_test('entity_blog_create', $dataset);
+
+    echo " ~~ Test done for entity_blog_create() ~~ \n\n";
 }
 
 /**
@@ -120,26 +131,14 @@ function data_entity_blog_list_by_type() {
 }
 
 /**
- * Helper function that runs test with given dataset
- **/
-function run_test($name, $dataset) {
-
-    // Loop through dataset
-    foreach($dataset as $data) {
-
-        // Runs the test
-        call_user_func("test_$name", $data);
-
-        // Runs the cleanup
-        call_user_func("clean_$name", $data);
-    }
-}
-
-/**
  * Runs the test suite
  **/
 function entity_run_suite() {
+    echo "--------------------------------------\n";
+    echo "Running entity test suite\n";
+    echo "--------------------------------------\n";
     data_entity_blog_list_all();
     data_entity_blog_list_by_type();
     data_entity_blog_create();
+    echo "``````````````````````````````````````\n";
 }
