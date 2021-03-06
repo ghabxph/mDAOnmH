@@ -135,7 +135,7 @@ uploaded instead of using the name from the client side.
 
 Best approach for naming the file is by doing sha256 hash and use the result value as name.
 
-## Code Issues
+## Code Issues / Buggy code
 
 ### 1. Inconsistency on line 3 ~ 5 leading to potentially undesirable result.
 
@@ -159,6 +159,41 @@ But this is better. It does the same purpose as above but we don't get to call t
     if ($filter = trim($_GET['filter']) !== '') {
         $sql = 'SELECT * FROM blog WHERE type="'.$filter.'" ORDER BY created_at DESC;';
     }
+```
+
+### 2. Not checking across upload_max_filesize
+
+**Problem:**
+In the code below, the application just simply assumes that `$_FILES['file']['tmp_name']` exists. If
+the uploaded file is bigger than php.ini's max limit, this file will be empty and will trigger
+an ambiguous error that would make developer cry in blood.
+
+``` php
+        move_uploaded_file(
+            $_FILES['file']['tmp_name'],
+            __DIR__.'/uploads/'.$_FILES['file']['name']
+        );
+```
+
+From this `unsecure` source code, if you uploaded a file that is bigger than  php.ini's  set  limit,
+you will wonder that some images you upload is not rendering. This will simply cause confusion.
+
+**Solution:**
+Make it something like this (implemented in `secure`)
+``` php
+        $max_size = 1024 * 1024 * (int)ini_get('upload_max_filesize');
+        $sub_size = (int) $_SERVER['CONTENT_LENGTH'];
+
+        // Check if we hit max file upload
+        if ($sub_size > $max_size) {
+            die("Max file size has been reached. Max size: $max_size, Submitted size: $sub_size");
+        }
+
+        # Generate a filename by hashing the file
+        $filename = $_FILES['file']['name'];
+
+        # Move the uploaded file to upload directory
+        move_uploaded_file($_FILES['file']['tmp_name'], '/var/www/uploads/'.$filename);
 ```
 
 ## Other Issues
