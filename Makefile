@@ -22,6 +22,8 @@ db:
 	@echo ---- ssh to db ----
 	docker exec -it mdaonmh_db_1 mysql -uroot -pcpuSUW49oS9TNIzB exam
 
+test: tbetter
+
 tbetter:
 	@echo ---- Runs test for better ----
 	docker exec -it mdaonmh_better-php_1 php test.php
