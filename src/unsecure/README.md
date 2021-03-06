@@ -115,6 +115,32 @@ Wrap it with `htmlspecialchars`.
             <?php } ?>
 ```
 
+## Code Issues
+
+### 1. Inconsistency on line 3 ~ 5 leading to potentially undesirable result.
+
+In the code snippet below, we see that we check if the "trimmed" filter is empty, but on our SQL
+statement, we did not trim the filter. The code below is quite buggy.
+``` php
+    if (trim($_GET['filter']) !== '') {
+        $sql = 'SELECT * FROM blog WHERE type="'.$_GET['filter'].'" ORDER BY created_at DESC;';
+    }
+```
+
+Here's the fix.
+``` php
+    if (trim($_GET['filter']) !== '') {
+        $sql = 'SELECT * FROM blog WHERE type="'.trim($_GET['filter']).'" ORDER BY created_at DESC;';
+    }
+```
+
+But this is better. It does the same purpose as above but we don't get to call trim twice.
+``` php
+    if ($filter = trim($_GET['filter']) !== '') {
+        $sql = 'SELECT * FROM blog WHERE type="'.$filter.'" ORDER BY created_at DESC;';
+    }
+```
+
 ## Other Issues
 
 Other issues are to be further emphasized  here  on  my  [secure version](../secure)  of  this  app.
