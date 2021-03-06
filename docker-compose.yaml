@@ -4,7 +4,7 @@ services:
 
   unsecure-web:
     build:
-      context: ./src/unsecure/
+      context: ./src/unsecure
       dockerfile: caddy.dockerfile
     volumes:
       - ./src/unsecure/src:/var/www/html
@@ -26,7 +26,7 @@ services:
 
   secure-web:
     build:
-      context: ./src/secure/
+      context: ./src/secure
       dockerfile: caddy.dockerfile
     volumes:
       - ./src/secure/src:/var/www/html
@@ -46,11 +46,33 @@ services:
       - DB_USERNAME=exam
       - DB_PASSWORD=eIggr3T18BNkLZ17
 
+  better-web:
+    build:
+      context: ./src/better
+      dockerfile: caddy.dockerfile
+    volumes:
+      - ./src/better/src:/var/www/html
+      - better-uploads:/var/www/uploads
+    ports:
+      - 8082:80
+
+  better-php:
+    build:
+      context: ./src/better
+    volumes:
+      - ./src/better/src:/var/www/html
+      - better-uploads:/var/www/uploads
+    environment:
+      - DB_HOST=db
+      - DB_NAME=exam
+      - DB_USERNAME=exam
+      - DB_PASSWORD=eIggr3T18BNkLZ17
+
   laravel-web:
     build:
       context: ./src/laravel/caddy
     ports:
-      - 8082:80
+      - 8083:80
 
   laravel-php:
     build:
@@ -73,3 +95,4 @@ services:
 volumes:
   unsecure-uploads:
   secure-uploads:
+  better-uploads:

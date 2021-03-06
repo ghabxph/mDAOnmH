@@ -17,7 +17,7 @@
 }
 
 # Set for all routes
-root * /var/www/html
+root * /var/www/html/public
 
 # Set uploads route
 root /uploads/* /var/www
@@ -29,6 +29,6 @@ file_server
 rewrite / /index.php
 
 # Or serve a PHP site through php-fpm:
-php_fastcgi @php secure-php:9000 {
+php_fastcgi @php better-php:9000 {
     index index.php
 }

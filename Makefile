@@ -18,10 +18,10 @@ logs:
 	@echo ---- logs -----
 	docker-compose logs
 
-ssh-secure:
-	@echo ---- ssh ----
-	docker exec -it mdaonmh_secure-php_1 sh
-
 db:
 	@echo ---- ssh to db ----
 	docker exec -it mdaonmh_db_1 mysql -uroot -pcpuSUW49oS9TNIzB exam
+
+tbetter:
+	@echo ---- Runs test for better ----
+	docker exec -it mdaonmh_better-php_1 php test.php
