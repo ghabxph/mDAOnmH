@@ -59,35 +59,8 @@ clean design that I'm going to work on for the next iteration of this applicatio
 
 ![](../../assets/desired-architechture-1.jpg)
 
-The file upload storage has already been implemented in this stage. The `Caddyfile` setting
-that allows it to be possible is this code snippet below.
+The  file  upload  storage   has  already   been   implemented   in   this   stage.   This
+[Caddyfile](caddy/Caddyfile) allows it to happen.
 
-``` 
-# Runs at port 80
-:80
-
-# Regular expression to match php files
-@php {
-     path_regexp ^/[a-z\-]*\.php$
-}
-
-# Set for all routes
-root * /var/www/html
-
-# Set uploads route
-root /uploads/* /var/www
-
-# Enable file server
-file_server
-
-# Rewrite / to index.php
-rewrite / /index.php
-
-# Or serve a PHP site through php-fpm:
-php_fastcgi @php secure-php:9000 {
-    index index.php
-}
-```
-
-The rest are to be implemented on the next iteration without using any frameworks to keep
-things lean and similar to original source code.
+The rest such as `entity`,`controller`, `view`, `gateway` are to  be  implemented  in  the
+next iteration of this application.
