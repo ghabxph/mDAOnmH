@@ -1,5 +1,9 @@
 # mDAOnmH
 
+## Done reading?
+
+* [Let's go next to the secure version >>](../secure)
+
 ## Changes
 
 * Use of `$_ENV` instead of hardcoded credentials.
@@ -111,3 +115,9 @@ Wrap it with `htmlspecialchars`.
             </div>
             <?php } ?>
 ```
+
+## Other Issues
+
+Other issues are to be further emphasized  here  on  my  [secure version](../secure)  of  this  app.
+The [secure version](../secure) is just a minimal refactor eliminating all security vulnerabilities,
+but keeps the code structure as much as possible.
