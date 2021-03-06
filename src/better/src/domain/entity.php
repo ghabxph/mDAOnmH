@@ -83,7 +83,7 @@ function read($query, $types = NULL, $params, &...$results) {
         $remove = count($params) - strlen($types);
 
         // Remove n number of values from the last elements
-        $params = array_splice($params, 0, -$remove);
+        $params = $remove === 0 ? $params : array_splice($params, 0, -$remove);
 
         // Binds parameters
         $stmt->bind_param($types, ...array_values($params));
@@ -110,8 +110,17 @@ function write($query, $types = NULL, ...$params) {
     $stmt = db()->prepare($query);
 
     // Check if there are parameters
-    if (is_string($types))
+    if (is_string($types)) {
+
+        // Count number of items to remove
+        $remove = count($params) - strlen($types);
+
+        // Remove n number of values from the last elements
+        $params = $remove === 0 ? $params : array_splice($params, 0, -$remove);
+
+        // Binds parameters
         $stmt->bind_param($types, ...$params);
+    }
 
     // Executes query
     $r = $stmt->execute();

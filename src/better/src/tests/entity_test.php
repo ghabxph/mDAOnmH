@@ -70,8 +70,7 @@ function test_entity_blog_create(string $name) {
         ->cleanup(function($p){
 
             // Removes the created data
-            write('DELETE FROM blog WHERE title = ?', 's', $p);
-
+            write('DELETE FROM blog WHERE title = ?', 's', ...array_values($p));
         })
         ->run();
 }
