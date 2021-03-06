@@ -7,7 +7,6 @@
 ## Changes
 
 * Use of `$_ENV` instead of hardcoded credentials.
-* Fixes incorrect SQL statements
 
 ## What did not change
 
