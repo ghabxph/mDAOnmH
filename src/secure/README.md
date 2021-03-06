@@ -28,6 +28,19 @@ It is ideal to separate the logic from the front end. Keeping this practice is n
 to be sustainable in the long run if the project goes. It is possible to keep thing lean
 even we do the procedural approach by applying "Clean Architechture".
 
+#### Desired Architechture (Keeping the endpoints)
+
+It doesn't mean that clean architechture is limited to OOP. This  is  my  initial  desired
+clean design that I'm going to work on for the next iteration of this application.
+
+![](../../assets/desired-architechture-1.jpg)
+
+The  file  upload  storage   has  already   been   implemented   in   this   stage.   This
+[Caddyfile](caddy/Caddyfile) allows it to happen.
+
+The rest such as `entity`,`controller`, `view`, `gateway` are to  be  implemented  in  the
+next iteration of this application.
+
 ### 2. (CODE SMELL) Redundant code.
 
 Usage of mysqli_connect is redundant.
@@ -54,16 +67,3 @@ must implement validation for this.
 In the server side, the content must be trimmed to specific number of string  so  that  we
 only display enough characters in our page. In return, the number  of  bytes  we  received
 from index.php would be minimal.
-
-## Desired Architechture (Keeping the endpoints)
-
-It doesn't mean that clean architechture is limited to OOP. This  is  my  initial  desired
-clean design that I'm going to work on for the next iteration of this application.
-
-![](../../assets/desired-architechture-1.jpg)
-
-The  file  upload  storage   has  already   been   implemented   in   this   stage.   This
-[Caddyfile](caddy/Caddyfile) allows it to happen.
-
-The rest such as `entity`,`controller`, `view`, `gateway` are to  be  implemented  in  the
-next iteration of this application.
