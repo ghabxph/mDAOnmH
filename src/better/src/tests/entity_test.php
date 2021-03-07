@@ -131,7 +131,7 @@ function test_entity_blog_create(string $name) {
         ->prepare(function($p) {})
         ->test(function($p) {
             // Run target function
-            $status = entity_blog_create($p);
+            $status = entity_blog_create(...array_values($p));
 
             // Status must be true
             assert_equal(TRUE, $status, 'entity_blog_create($p) should return true');
