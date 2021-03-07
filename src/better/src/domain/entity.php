@@ -7,8 +7,13 @@ $_mysqli_inst = NULL;
  * Entity: Blog
  * Action: List All
  **/
-function entity_blog_list_all() {
+function entity_blog_list_all(&$id, &$title, &$content, &$filename, &$type, &$created_at) {
 
+    // Lists all blog items
+    return read(
+        'SELECT * FROM blog ORDER BY created_at DESC',
+        NULL, [], $id, $title, $content, $filename, $type, $created_at
+    );
 }
 
 /**

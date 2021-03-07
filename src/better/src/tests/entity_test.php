@@ -24,15 +24,16 @@ function test_entity_blog_list_all(string $name) {
         ->test(function($p) {
 
             // Run target function
-            $stmt = entity_blog_list_all($p['filter'], $id, $title, $content, $filename, $type, $created_at);
+            $stmt = entity_blog_list_all($id, $title, $content, $filename, $type, $created_at);
 
-            foreach ($p['expected'] as $expected_title) {
+            foreach ($p as $expected) {
 
                 // Fetches from statement
                 assert_equal(TRUE, $stmt->fetch(), "Fetching $expected_title");
 
                 // Validates
-                assert_equal($expected_title, $title, "We should get $title");
+                assert_equal($expected['type'], $type, "We should get our expected type: $type");
+                assert_equal($expected['title'], $title, "We should get our expected title: $title");
             }
         })
         ->dataset([
