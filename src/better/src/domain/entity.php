@@ -15,7 +15,14 @@ function entity_blog_list_all() {
  * Entity: Blog
  * Action: List by type
  **/
-function entity_blog_list_by_type() {
+function entity_blog_list_by_type(string $filter, &$id, &$title, &$content, &$filename, &$type, &$created_at) {
+
+    // Lists blog items by type
+    return read(
+        'SELECT * FROM blog WHERE type = ? ORDER BY created_at DESC',
+        's', [$filter],
+        $id, $title, $content, $filename, $type, $created_at
+    );
 
 }
 

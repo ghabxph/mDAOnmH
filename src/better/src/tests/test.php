@@ -7,6 +7,7 @@ if (!class_exists('SimpleTest')) {
      **/
     class SimpleTest {
 
+        private $prepare_script;
         private $test_name;
         private $dataset;
         private $cleanup_script;
@@ -16,6 +17,18 @@ if (!class_exists('SimpleTest')) {
 
             // Sets the name of test function
             $this->test_name = $test_name;
+        }
+
+        /**
+         * Sets the preparation script
+         **/
+        function prepare(Closure $callback): self {
+
+            // Sets prepare script
+            $this->prepare_script = $callback;
+
+            // Returns instance
+            return $this;
         }
 
         /**
@@ -73,6 +86,9 @@ if (!class_exists('SimpleTest')) {
             foreach($this->dataset as $dataset_name => $data) {
 
                 echo "    ~ $dataset_name\n";
+
+                // Runs the preparation
+                ($this->prepare_script)($data);
 
                 // Runs the test
                 ($this->test_script)($data);

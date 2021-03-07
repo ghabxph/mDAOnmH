@@ -8,7 +8,66 @@ require(__DIR__ . '/test.php');
  * Test: Blog List All
  **/
 function test_entity_blog_list_all(string $name) {
+    run_test($name)
+        ->prepare(function($p) {
 
+            // Create new blog titles
+            foreach($p as $item) {
+
+                // Create blog entry
+                write(
+                    'INSERT INTO blog SET title = ?, type = ?, created_at = NOW()',
+                    'ss', $item['title'], $item['type']
+                );
+            }
+        })
+        ->test(function($p) {
+
+            // Run target function
+            $stmt = entity_blog_list_all($p['filter'], $id, $title, $content, $filename, $type, $created_at);
+
+            foreach ($p['expected'] as $expected_title) {
+
+                // Fetches from statement
+                assert_equal(TRUE, $stmt->fetch(), "Fetching $expected_title");
+
+                // Validates
+                assert_equal($expected_title, $title, "We should get $title");
+            }
+        })
+        ->dataset([
+            'Dataset 1: Government and Sports News' => [
+                [
+                    'type'  => 'Government',
+                    'title' => 'Covid19 Response'
+                ],
+                [
+                    'type'  => 'Sports',
+                    'title' => 'DotA2'
+                ],
+                [
+                    'type'  => 'Government',
+                    'title' => 'Humanitarian Services'
+                ],
+                [
+                    'type'  => 'Government',
+                    'title' => 'Important Announcement'
+                ],
+            ]
+        ])
+        ->cleanup(function($p) {
+
+            // Performing cleanup
+            foreach($p as $item) {
+
+                // Removes the created data
+                write(
+                    'DELETE FROM blog WHERE title = ? AND type = ?',
+                    'ss', $item['title'], $item['type']
+                );
+            }
+        })
+        ->run();
 }
 
 /**
@@ -16,7 +75,50 @@ function test_entity_blog_list_all(string $name) {
  * Test: Blog list by type
  **/
 function test_entity_blog_list_by_type(string $name) {
+    run_test($name)
+        ->prepare(function($p) {
 
+            // Create new blog titles
+            foreach($p['expected'] as $item) {
+
+                // Create blog entry
+                write('INSERT INTO blog SET title = ?, type = ?, created_at = NOW()', 'ss', $item, $p['filter']);
+            }
+        })
+        ->test(function($p) {
+
+            // Run target function
+            $stmt = entity_blog_list_by_type($p['filter'], $id, $title, $content, $filename, $type, $created_at);
+
+            foreach ($p['expected'] as $expected_title) {
+
+                // Fetches from statement
+                assert_equal(TRUE, $stmt->fetch(), "Fetching $expected_title");
+
+                // Validates
+                assert_equal($expected_title, $title, "We should get $title");
+            }
+        })
+        ->dataset([
+            'Dataset 1: Government News' => [
+                'filter' => 'Government',
+                'expected' => ['Covid19 Response', 'Humanitarian Services', 'Important Announcement']
+            ],
+            'Dataset 2: Sports News' => [
+                'filter' => 'Sports',
+                'expected' => ['DotA2', 'MLBB', 'Eh']
+            ]
+        ])
+        ->cleanup(function($p) {
+
+            // Performing cleanup
+            foreach($p['expected'] as $item) {
+
+                // Removes the created data
+                write('DELETE FROM blog WHERE title = ? AND type = ?', 'ss', $item, $p['filter']);
+            }
+        })
+        ->run();
 }
 
 /**
@@ -25,6 +127,7 @@ function test_entity_blog_list_by_type(string $name) {
  **/
 function test_entity_blog_create(string $name) {
     run_test($name)
+        ->prepare(function($p) {})
         ->test(function($p) {
             // Run target function
             $status = entity_blog_create($p);

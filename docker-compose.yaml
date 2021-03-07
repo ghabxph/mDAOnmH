@@ -67,6 +67,9 @@ services:
       - DB_NAME=exam
       - DB_USERNAME=exam
       - DB_PASSWORD=eIggr3T18BNkLZ17
+      - DB_TEST_NAME=exam_test
+      - DB_TEST_USERNAME=exam_test
+      - DB_TEST_PASSWORD=TwK0kdEUy7xff3Jv
 
   laravel-web:
     build:
