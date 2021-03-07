@@ -4,7 +4,7 @@ This thing is  fully  refactored.  The  endpoints  `index.php`  and  `create-new
 retained but code wise, a lot of thing has changed. I wrote full test case  for  `entity`.
 And I did not use any framework such as PHPUnit.  This  whole  thing  is  so  lightweight.
 There's    no    *composer*,    just    bare    PHP.    I'm    quite    surprised     that
-[writing a test framework](src/test) would never be so simple. Maybe because I  just  have
+[writing a test framework](src/tests/test.php) would never be so simple. Maybe because I  just  have
 few things that I need to get my test done, but it does the job.
 
 ## Done reading?
