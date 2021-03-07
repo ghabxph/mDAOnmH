@@ -196,6 +196,29 @@ Make it something like this (implemented in `secure`)
         move_uploaded_file($_FILES['file']['tmp_name'], '/var/www/uploads/'.$filename);
 ```
 
+## Good practice to keep
+
+### 1. For production setup, obviously don't use root
+
+My revised dev setup is that I don't use root for development. Maybe it's just me and it's  just  my
+bias. But in production, never ever ever use root. Always delegate different user per project.
+
+``` sql
+GRANT SELECT, UPDATE, DELETE, INSERT ON exam.* to 'exam'@'%' IDENTIFIED BY 'eIggr3T18BNkLZ17';
+CREATE DATABASE exam;
+USE exam;
+CREATE TABLE blog (
+    id INT(6) AUTO_INCREMENT PRIMARY KEY,
+    title TEXT NULL,
+    content TEXT NULL,
+    filename TEXT NULL,
+    type VARCHAR(50),
+    created_at TIMESTAMP NOT NULL
+);
+```
+
+Password is disclosed right. But no worries. Obviously it's just for local development.
+
 ## Other Issues
 
 Other issues are to be further emphasized  here  on  my  [secure version](../secure)  of  this  app.
