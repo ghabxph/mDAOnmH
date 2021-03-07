@@ -42,7 +42,7 @@ if (!function_exists('entity_blog_create')) {
      * Entity: Blog
      * Action: Create
      **/
-    function entity_blog_create($p) {
+    function entity_blog_create(string $title, string $content, string $type, string $filename) {
 
         // Creates new blog entry
         return write('
@@ -53,10 +53,10 @@ if (!function_exists('entity_blog_create')) {
             filename   = ?,
             created_at = NOW()',
           'ssss',
-          $p['title'],
-          $p['content'],
-          $p['type'],
-          $p['filename']
+          $title,
+          $content,
+          $type,
+          $filename
         );
     }
 }

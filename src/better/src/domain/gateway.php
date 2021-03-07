@@ -1,6 +1,7 @@
 <?php
 
 require (__DIR__ . '/controller.php');
+require (__DIR__ . '/../view.php');
 
 if (!function_exists('gateway_blog_list_all')) {
     /**
@@ -10,7 +11,7 @@ if (!function_exists('gateway_blog_list_all')) {
     function gateway_blog_list_all() {
 
         // Returns all blog items
-        return controller_response(controller_blog_list_all());
+        controller_response(controller_blog_list_all());
     }
 }
 
@@ -19,10 +20,10 @@ if (!function_exists('gateway_blog_list_by_type')) {
      * Entity: Blog
      * Action: List by type
      **/
-    function gateway_blog_list_by_type(string $filter) {
+    function gateway_blog_list_by_type(array $parameters) {
 
         // Returns all blog items
-        return controller_response(controller_blog_list_by_type(...get_params($_GET, 'filter')));
+        controller_response(controller_blog_list_by_type(...get_params($parameters, 'filter')));
     }
 }
 
@@ -31,10 +32,25 @@ if (!function_exists('gateway_blog_create')) {
      * Entity: Blog
      * Action: Create blog
      **/
-    function gateway_blog_create($p) {
+    function gateway_blog_create(array $parameters) {
 
         // Returns all blog items
-        return controller_response(controller_blog_create(get_params($_POST, 'title', 'content', 'type', 'filename')));
+        controller_response(controller_blog_create(get_params($parameters, 'title', 'content', 'type', 'filename')));
+    }
+}
+
+if (!function_exists('gateway_create_news_view')) {
+    /**
+     * View: create-news.view.php
+     * Description: Simply renders create-news view
+     **/
+    function gateway_create_news_view($p) {
+        controller_response([
+            'view' => [
+                'view'      => 'create-news',
+                'variables' => ''
+            ]
+        ]);
     }
 }
 
@@ -43,11 +59,22 @@ if (!function_exists('controller_response')) {
      * Helper function that parses controller's return value
      **/
     function controller_response(array $response) {
+
         // Set HTTP Status
         http_response_code($response['status']);
 
-        // Return response
-        return $response;
+        // Check if redirect
+        if (isset($response['redirect'])) {
+
+            // Let's do redirect and skip view rendering.
+            header('Location: ' . $response['redirect']);
+
+            // Exit the function
+            return;
+        }
+
+        // Serves the view
+        view($response);
     }
 }
 
@@ -57,17 +84,7 @@ if (!function_exists('get_params')) {
      **/
     function get_params(array $var, string ...$params) {
 
-        // Parameters to return
-        $p = [];
-
-        // Loop through requested parameters
-        foreach ($params as $param) {
-
-            // Returns empty string if variable does not exist
-            $p[$param] = isset($var[$param]) ? $var[$param] : '';
-        }
-
-        // Return requested parameters
-        return $p;
+        // Does my desired magic.
+        return array_values(array_intersect_key(array_replace(array_flip($params), $var), array_flip($params)));
     }
 }
