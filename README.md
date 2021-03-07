@@ -12,9 +12,9 @@ project.
 
 ## Links to read:
 
-* [Unsecured README.md - Explaining Issues](src/unsecure)
-* [Secured README.md - The fixes](src/secure)
-* [Better README.md - Restructuring things (Working in progress)](src/secure)
+* [Unsecured README.md - Explaining Issues](src/unsecure) -> 1. Start here
+* [Secured README.md - The fixes](src/secure) -> 2. Then here
+* [Better README.md - Restructuring things (Working in progress)](src/better) -> 3. Then here
 * ~~[Bonus: The laravel way](src/laravel)~~
 
 ## Requirements
